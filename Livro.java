@@ -4,24 +4,23 @@ public class Livro {
     private String titulo;
     private String autor;
     private int ano;
-    private boolean disponivel;
+    private StatusLivro status;
 
     public Livro(String titulo, String autor, int ano){ //this usa no atributo da classe, e recebe o parametro da função
         setTitulo(titulo);
         setAutor(autor);
         setAno(ano);
-        this.disponivel = true;
+        this.status= StatusLivro.DISPONIVEL;
     }
 
-    public boolean isDisponivel() { // verifica se esta disponivel
-        return disponivel;
+    public StatusLivro getStatus() {
+        return status;
     }
-    public void emprestimo(){
-        this.disponivel = false;
+
+    public void setStatus (StatusLivro status) {
+        this.status = status;
     }
-    public void devolução(){
-        this.disponivel = true;
-    }
+
     public int getAno() {
 
         return ano;
@@ -63,11 +62,9 @@ public class Livro {
 
     @Override //sobrecarga de metodo, escrevendo em cima no objeto endereço de memo
     public String toString() {
-        return "Livro{" +
-                "titulo='" + titulo + '\'' +
-                ", autor='" + autor + '\'' +
-                ", anoPublicado=" + ano +
-                '}';
+        return "Livro'" + titulo + "', de" + autor + "(" + ano +") - Status:" +  status;
+
     }
 }
+
 

@@ -22,8 +22,7 @@ public class usuario {
         return livrosEmprestados;
     }
 
-    public String getnome(){
-
+    public String getNome(){
         return nome;
     }
 
