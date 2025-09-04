@@ -1,29 +1,32 @@
 import java.time.LocalDate;
 
 public class Emprestimo {
-    private Livro livro;
-    private usuario usuario;
+    private ItemDoAcervo item;
+    private Usuario usuario;
     private LocalDate dataEmprestimo;
+    private LocalDate dataDevolucaoPrevista;
+    private LocalDate dataDevolucaoReal;
 
-    public Emprestimo(Livro livro, usuario usuario, LocalDate dataEmprestimo){
-        this.livro = Livro;
+    public Emprestimo(ItemDoAcervo item, Usuario usuario, LocalDate dataEmprestimo, LocalDate dataDevolucaoPrevista) {
+        this.item = item;
         this.usuario = usuario;
         this.dataEmprestimo = dataEmprestimo;
+        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
+        this.dataDevolucaoReal = null;
     }
 
-    public Livro getLivro() {
-        return livro;
+    public ItemDoAcervo getItem() {
+        return item;
     }
 
-    public void setLivro(Livro livro) {
-        this.livro = livro;
+    public void setItem(Livro livro) {this.item= livro;
     }
 
-    public usuario getUsuario() {
+    public Usuario getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(usuario usuario) {
+    public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 
@@ -33,5 +36,21 @@ public class Emprestimo {
 
     public void setDataEmprestimo(LocalDate dataEmprestimo) {
         this.dataEmprestimo = dataEmprestimo;
+    }
+
+    public LocalDate getDataDevolucaoPrevista() {
+        return dataDevolucaoPrevista;
+    }
+
+    public void setDataDevolucaoPrevista(LocalDate dataDevolucaoPrevista) {
+        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
+    }
+
+    public LocalDate getDataDevolucaoReal() {
+        return dataDevolucaoReal;
+    }
+
+    public void setDataDevolucaoReal(LocalDate dataDevolucaoReal) {
+        this.dataDevolucaoReal = dataDevolucaoReal;
     }
 }
