@@ -20,7 +20,7 @@ public class Biblioteca {
 
     public void realizarEmprestimo(String idUsuario, String titulo) {
         // 1 - Buscar os objetos usuario e livro
-        Usuario usuarioDoEmprestimo = pesquisarUsuarioPorId(idUsuario);
+        Usuario usuarioDoEmprestimo = pesquisarUsuarioPorNome(idUsuario);
         if(usuarioDoEmprestimo == null) {
             System.out.println("Erro: usuário não cadastrado.");
             return;
@@ -92,9 +92,9 @@ public class Biblioteca {
         return null;
     }
 
-    public Usuario pesquisarUsuarioPorId(String id) {
+    public Usuario pesquisarUsuarioPorNome(String Nome) {
         for(Usuario usuario : this.listaDeUsuarios) {
-            if(usuario.getId().equals(id)) {
+            if(usuario.getNome().equals(Nome)) {
                 return usuario;
             }
         }
@@ -125,7 +125,7 @@ public class Biblioteca {
     public static void main(String[] args) {
         Livro livroJavaComoProgramar = new Livro("Java Como Programar", "Deitel", 2014);
         Livro livroMemoria = new Livro("Memórias Póstumas de Brás Cubas", "Machado de Assis", 1881);
-        Usuario meuUsuario = new Usuario("Thiago", "123");
+        Usuario meuUsuario = new Usuario("ane", "aailless", "123");
         Biblioteca minhaBiblioteca = new Biblioteca();
         minhaBiblioteca.cadastrarLivro(livroJavaComoProgramar);
         minhaBiblioteca.cadastrarLivro(livroMemoria);

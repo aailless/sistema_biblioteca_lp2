@@ -2,13 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class usuario {
+public class Usuario {
     private String nome;
     private String email;
     private String senha;
     private List<Livro> livrosEmprestados;
 
-    public usuario(String nome, String email, String senha){ // é o metodo construtor que define os tipos dos atributos
+    public Usuario(String nome, String email, String senha){ // é o metodo construtor que define os tipos dos atributos
         setNome(nome);
         setEmail(email);
         setSenha(senha);
@@ -71,7 +71,7 @@ public class usuario {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        usuario usuario = (usuario) o;
+        Usuario usuario = (Usuario) o;
         return Objects.equals(nome, usuario.nome) && Objects.equals(email, usuario.email) && Objects.equals(senha, usuario.senha);
     }
 
