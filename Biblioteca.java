@@ -9,8 +9,6 @@ public class Biblioteca {
     private List<ItemDoAcervo> acervo;
     private List<Usuario> listaDeUsuarios;
     private List<Emprestimo> registrosDeEmprestimos;
-    private static final int PRAZO_EMPRESTIMO_DIAS = 14;
-    private static final double VALOR_MULTA_DIA = 0.75;
 
     public Biblioteca() {
         this.acervo = new ArrayList<>();
@@ -38,7 +36,7 @@ public class Biblioteca {
         // 3 - Realizar o registro (Criar objeto do tipo Emprestimo e adiciona-lo ao registroDeEmprestimos)
         ItemDoEmprestimo.setStatus(StatusItem.EMPRESTADO);
         LocalDate dataEmprestimo = LocalDate.now();
-        LocalDate dataDevolucaoPrevista = dataEmprestimo.plusDays(PRAZO_EMPRESTIMO_DIAS);
+        LocalDate dataDevolucaoPrevista = dataEmprestimo.plusDays(ItemDoEmprestimo.getPrazo());
         Emprestimo emprestimo = new Emprestimo(ItemDoEmprestimo, usuarioDoEmprestimo, dataEmprestimo, dataDevolucaoPrevista);
         registrosDeEmprestimos.add(emprestimo);
         System.out.println("Emprestimo realizado com sucesso!");
@@ -74,7 +72,7 @@ public class Biblioteca {
         long dias = ChronoUnit.DAYS.between(emprestimo.getDataDevolucaoPrevista(), hoje);
 
         if(dias > 0) {
-            double multa = dias * VALOR_MULTA_DIA;
+            double multa = dias * item.getMulta_Por_dia();
             System.out.println("Livro devolvido. Você precisa pagar uma multa de R$" + multa);
         } else {
             System.out.println("Livro devolvido.");
@@ -131,13 +129,17 @@ public class Biblioteca {
         minhaBiblioteca.cadastrarLivro(livroMemoria);
         minhaBiblioteca.cadastrarUsuario(meuUsuario);
         minhaBiblioteca.listarAcervo();
-        minhaBiblioteca.realizarEmprestimo("123", "Java Como Programar");
+        minhaBiblioteca.realizarEmprestimo("ane", "Java Como Programar");
         minhaBiblioteca.listarAcervo();
         minhaBiblioteca.registrosDeEmprestimos.get(0).setDataDevolucaoPrevista(LocalDate.of(2025, 8, 31));
         minhaBiblioteca.realizarDevolucao("Java Como Programar");
         minhaBiblioteca.listarAcervo();
+
         Revista revista = new Revista("capricho",2025, 01);
         System.out.println(revista);
+
+        System.out.println(livroJavaComoProgramar.getPrazo());
+        System.out.println(revista.getPrazo());
 
     }
 }

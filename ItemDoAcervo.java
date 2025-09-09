@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 public class ItemDoAcervo {
     private String titulo;
     private int ano;
@@ -39,6 +42,13 @@ public class ItemDoAcervo {
     public ItemDoAcervo (String titulo, int ano){
         setTitulo(titulo);
         setAno(ano);
+        setStatus(StatusItem.DISPONIVEL);
+    }
+    public int getPrazo(){
+            return 7;
+    }
+    public double getMulta_Por_dia(){
+       return 0.50;
     }
 
 }
