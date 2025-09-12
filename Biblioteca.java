@@ -131,10 +131,6 @@ public class Biblioteca {
         return null;
     }
 
-//    public List<Livro> pesquisarLivroPorTermo(String termo) {
-//
-//    }
-
     public void listarAcervo() {
         System.out.println("Itens no Acervo");
         for (var item : acervo) {
@@ -202,6 +198,7 @@ public class Biblioteca {
             scanner.close();
             }
 }
+
 
 
 
