@@ -1,14 +1,47 @@
-import javax.swing.*;
+//RESPOSTA DO EXERCICIO 0 : Não,  não seria possível instanciar um ItemDoAcervo diretamente no main
+// pois provavelmente causaria um erro de compilação por que a classe ItemDoAcervo foi projetada para
+// ser uma classe base ou classe abstrata. O propósito dela não é ser usada sozinha, mas sim definir
+// as características comuns (como título e ano) que todas as subclasses, como Livro ou Revista, irão herdar.
+// A maneira correta de criar um novo item seria instanciando uma das subclasses, para quecada objeto
+// represente um item concreto e válido na biblioteca.
+import java.util.List;
+import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Biblioteca {
 
     private List<ItemDoAcervo> acervo;
     private List<Usuario> listaDeUsuarios;
     private List<Emprestimo> registrosDeEmprestimos;
+    private int PrazoEmprestimoDias = 7;
+    private double ValorMultaPorDiasAtraso = 0.75;
+
+    public List<ItemDoAcervo> buscar(String termo) {
+        String termoLowerCase = termo.toLowerCase();
+
+        List<ItemDoAcervo> resultados = new ArrayList<>();
+            for (ItemDoAcervo item : this.acervo) {
+                boolean corresponde = false;
+
+                if (item.getTitulo().toLowerCase().contains(termoLowerCase)) {
+                    corresponde = true;
+                }
+                if (item instanceof Livro) {
+                    Livro livro = (Livro) item;
+                    if (livro.getAutor().toLowerCase().contains(termoLowerCase)) {
+                        corresponde = true;
+                    }
+                }
+                if (corresponde) {
+                    resultados.add(item);
+                }
+            }
+
+            return resultados;
+        }
+
 
     public Biblioteca() {
         this.acervo = new ArrayList<>();
@@ -17,7 +50,7 @@ public class Biblioteca {
     }
 
     public void realizarEmprestimo(String idUsuario, String titulo) {
-        // 1 - Buscar os objetos usuario e livro
+
         Usuario usuarioDoEmprestimo = pesquisarUsuarioPorNome(idUsuario);
         if(usuarioDoEmprestimo == null) {
             System.out.println("Erro: usuário não cadastrado.");
@@ -28,22 +61,21 @@ public class Biblioteca {
             System.out.println("Erro: livro não cadastrado.");
             return;
         }
-        // 2 - Validar a regra de negocio (verificar se o livro está disponível)
         if(ItemDoEmprestimo.getStatus() == StatusItem.EMPRESTADO) {
             System.out.println("Erro: livro já emprestrado.");
             return;
+        }else {
+            ItemDoEmprestimo.setStatus(StatusItem.EMPRESTADO);
+            LocalDate dataEmprestimo = LocalDate.now();
+            LocalDate dataDevolucaoPrevista = dataEmprestimo.plusDays(ItemDoEmprestimo.getPrazoEmprestimoDias());
+            Emprestimo emprestimo = new Emprestimo(ItemDoEmprestimo, usuarioDoEmprestimo, dataEmprestimo, dataDevolucaoPrevista);
+            registrosDeEmprestimos.add(emprestimo);
+            System.out.println("Emprestimo realizado com sucesso!");
+            System.out.println("O livro '" + ItemDoEmprestimo.getTitulo()
+                    + "' foi emprestado para o usuário " + usuarioDoEmprestimo.getNome()
+                    + " na data " + emprestimo.getDataEmprestimo()
+                    + " e tem de ser devolvido em " + emprestimo.getDataDevolucaoPrevista());
         }
-        // 3 - Realizar o registro (Criar objeto do tipo Emprestimo e adiciona-lo ao registroDeEmprestimos)
-        ItemDoEmprestimo.setStatus(StatusItem.EMPRESTADO);
-        LocalDate dataEmprestimo = LocalDate.now();
-        LocalDate dataDevolucaoPrevista = dataEmprestimo.plusDays(ItemDoEmprestimo.getPrazo());
-        Emprestimo emprestimo = new Emprestimo(ItemDoEmprestimo, usuarioDoEmprestimo, dataEmprestimo, dataDevolucaoPrevista);
-        registrosDeEmprestimos.add(emprestimo);
-        System.out.println("Emprestimo realizado com sucesso!");
-        System.out.println("O livro '"+ItemDoEmprestimo.getTitulo()
-                +"' foi emprestado para o usuário " + usuarioDoEmprestimo.getNome()
-                +" na data " + emprestimo.getDataEmprestimo()
-                +" e tem de ser devolvido em " + emprestimo.getDataDevolucaoPrevista());
     }
 
     public Emprestimo buscarEmprestimoAtivoPorItem(ItemDoAcervo item) {
@@ -68,14 +100,14 @@ public class Biblioteca {
             System.out.println("Erro: esse emprestimo não existe.");
             return;
         }
-        LocalDate hoje = LocalDate.now();
+        LocalDate hoje = LocalDate.of(2025, 9, 20); // alterei a dava de devoluçao apenas para simular o calculo da muta de atraso
         long dias = ChronoUnit.DAYS.between(emprestimo.getDataDevolucaoPrevista(), hoje);
 
         if(dias > 0) {
-            double multa = dias * item.getMulta_Por_dia();
-            System.out.println("Livro devolvido. Você precisa pagar uma multa de R$" + multa);
+            double multa = dias * item.getValorMultaPorDiasAtraso();
+            System.out.println("item devolvido. Você precisa pagar uma multa de R$" + multa);
         } else {
-            System.out.println("Livro devolvido.");
+            System.out.println("item devolvido.");
         }
         emprestimo.getItem().setStatus(StatusItem.DISPONIVEL);
         emprestimo.setDataDevolucaoReal(hoje);
@@ -110,7 +142,7 @@ public class Biblioteca {
         }
     }
 
-    public void cadastrarLivro(ItemDoAcervo item) {
+    public void cadastrarItem(ItemDoAcervo item) {
         this.acervo.add(item);
         System.out.println("O item " + item.getTitulo() + " foi cadastrado.");
     }
@@ -125,21 +157,51 @@ public class Biblioteca {
         Livro livroMemoria = new Livro("Memórias Póstumas de Brás Cubas", "Machado de Assis", 1881);
         Usuario meuUsuario = new Usuario("ane", "aailless", "123");
         Biblioteca minhaBiblioteca = new Biblioteca();
-        minhaBiblioteca.cadastrarLivro(livroJavaComoProgramar);
-        minhaBiblioteca.cadastrarLivro(livroMemoria);
+        minhaBiblioteca.cadastrarItem(livroJavaComoProgramar);
+        minhaBiblioteca.cadastrarItem(livroMemoria);
         minhaBiblioteca.cadastrarUsuario(meuUsuario);
         minhaBiblioteca.listarAcervo();
         minhaBiblioteca.realizarEmprestimo("ane", "Java Como Programar");
         minhaBiblioteca.listarAcervo();
-        minhaBiblioteca.registrosDeEmprestimos.get(0).setDataDevolucaoPrevista(LocalDate.of(2025, 8, 31));
+        minhaBiblioteca.registrosDeEmprestimos.get(0).setDataDevolucaoPrevista(LocalDate.of(2025, 7, 31));
         minhaBiblioteca.realizarDevolucao("Java Como Programar");
         minhaBiblioteca.listarAcervo();
 
         Revista revista = new Revista("capricho",2025, 01);
         System.out.println(revista);
 
-        System.out.println(livroJavaComoProgramar.getPrazo());
-        System.out.println(revista.getPrazo());
+        DVD barbie = new DVD("barbie", 2000, 120);
+        minhaBiblioteca.cadastrarItem(barbie);
+        minhaBiblioteca.listarAcervo();
+        minhaBiblioteca.realizarEmprestimo("ane", "barbie");
+        minhaBiblioteca.registrosDeEmprestimos.get(0).setDataDevolucaoPrevista(LocalDate.of(2025, 7, 31));
 
-    }
+        minhaBiblioteca.listarAcervo();
+        minhaBiblioteca.realizarDevolucao("barbie");
+        minhaBiblioteca.listarAcervo();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Digite o termo de busca (título ou autor):");
+        String termoDeBusca = scanner.nextLine();
+
+        List<ItemDoAcervo> resultados = minhaBiblioteca.buscar(termoDeBusca);
+        System.out.println("\n--- Resultados da Busca ---");
+            if (resultados.isEmpty()) {
+                System.out.println("Nenhum item encontrado.");
+            } else {
+                for (ItemDoAcervo item : resultados) {
+                    if (item instanceof Livro) {
+                        Livro livro = (Livro) item;
+                        System.out.println("- " + livro.getTitulo() + " (Autor: " + livro.getAutor() + ")");
+                    } else {
+                        System.out.println("- " + item.getTitulo());
+                    }
+                }
+            }
+
+            scanner.close();
+            }
 }
+
+
+

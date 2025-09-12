@@ -1,7 +1,4 @@
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
-public class ItemDoAcervo {
+public abstract class ItemDoAcervo {
     private String titulo;
     private int ano;
     private StatusItem status;
@@ -44,12 +41,13 @@ public class ItemDoAcervo {
         setAno(ano);
         setStatus(StatusItem.DISPONIVEL);
     }
-    public int getPrazo(){
+    public int getPrazoEmprestimoDias(){
             return 7;
     }
-    public double getMulta_Por_dia(){
-       return 0.50;
+    public double getValorMultaPorDiasAtraso(){
+        return  0.75;
     }
-
 }
+
+    
 

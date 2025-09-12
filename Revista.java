@@ -20,12 +20,13 @@ public class Revista extends ItemDoAcervo {
     }
 
     @Override
-    public int getPrazo() {
+    public int getPrazoEmprestimoDias() {
         return 10;
     }
 
     @Override
-    public double getMulta_Por_dia() {
+    public double getValorMultaPorDiasAtraso(){
         return 1.0;
     }
+
 }
